@@ -1,3 +1,5 @@
+from itertools import product
+
 import matplotlib.pyplot as plt
 
 LaTeX_SYMBOL_ANGSTROM = r'$\AA$'
@@ -12,15 +14,22 @@ def set_axis_ticks(
         x_label_position: str = 'bottom',
         y_label_position: str = 'left',
 ):
+    # convert the input strings to lower cases to enable case-insensitive comparison
+    for prefix, suffix in product(
+            ['x_', 'y_'], ['ticks_position', 'tick_label_position', 'label_position']):
+        locals()[f'{prefix}{suffix}'] = locals()[f'{prefix}{suffix}'].lower()
+
     x_tick_label_pos_dict = {
         'top': dict(labeltop=True, labelbottom=False),
         'bottom': dict(labeltop=False, labelbottom=True),
         'both': dict(labeltop=True, labelbottom=True),
+        'none': dict(labeltop=False, labelbottom=False),
     }
     y_tick_label_pos_dict = {
         'right': dict(labelright=True, labelleft=False),
         'left': dict(labelright=False, labelleft=True),
         'both': dict(labelright=True, labelleft=True),
+        'none': dict(labelright=False, labelleft=False),
     }
 
     if x_tick_label_position not in x_tick_label_pos_dict:
@@ -41,5 +50,5 @@ def set_axis_ticks(
             [x_ticks_position, y_ticks_position],
             [x_label_position, y_label_position]
     ):
-        ax.set_ticks_position(x_ticks_position)
+        ax.set_ticks_position(ticks_position)
         ax.set_label_position(label_position)
